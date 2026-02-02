@@ -1,0 +1,80 @@
+  @import '../../../../scss/settings/custom-variables';
+
+  .search-menu {
+      position: absolute;
+      top: 100%; // Trigger box-er thik niche
+      left: 10px;
+      right: 10px;
+      min-width: 220px;
+      background: $white;
+      z-index: 1050; // Jate table-er baire bheshe thake
+      border: 1px solid #ccd1d9;
+      border-radius: 4px;
+      margin-top: 5px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
+      .search-input-wrapper {
+          padding: 8px;
+          position: relative;
+          background: #fcfcfc;
+
+          .search-icon {
+              position: absolute;
+              right: 15px;
+              top: 18px;
+              color: #999;
+              font-size: 0.8rem;
+          }
+      }
+
+      ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          max-height: 200px;
+          overflow-y: auto;
+
+          li {
+              padding: 10px 15px;
+              font-size: 0.82rem;
+              border-bottom: 1px solid #f1f5f9;
+              cursor: pointer;
+              color: #333;
+
+              &:hover,
+              &.active {
+                  background-color: #f0f4ff;
+                  color: $indigo-primary;
+
+                  .check-icon.bi-check-square-fill {
+                      color: $indigo-primary;
+                  }
+              }
+
+              &.disabled {
+                  background-color: transparent !important;
+                  color: #a0aec0 !important;
+                  cursor: not-allowed;
+                  pointer-events: none;
+                  opacity: 0.6;
+
+                  .check-icon {
+                      color: #cbd5e0 !important;
+                  }
+              }
+
+              .check-icon {
+                  font-size: 0.95rem;
+                  color: #adb5bd;
+
+                  &.bi-check-square-fill {
+                      color: $indigo-primary;
+                  }
+              }
+
+              &:last-child {
+                  border-bottom: none;
+              }
+          }
+      }
+  }

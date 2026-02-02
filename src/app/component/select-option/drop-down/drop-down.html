@@ -1,0 +1,22 @@
+<div class="search-menu shadow">
+    <div class="p-2 border-bottom">
+        <div class="position-relative">
+            <input type="text" class="form-control form-control-sm" [(ngModel)]="searchTerm"
+                [ngModelOptions]="{standalone: true}" [placeholder]="placeholder" [disabled]="disabled" autofocus>
+        </div>
+    </div>
+    <ul class="list-unstyled mb-0 max-h-200 overflow-auto z-100">
+        @for (item of filteredList(); track $index) {
+        <li (click)="toggleSelection(item)" class="dropdown-item d-flex align-items-center"
+            [class.active]="isSelected(item)" [class.disabled]="item.disabled ?? false">
+            @if (multiple) {
+            <i class="bi me-2 check-icon" [class.bi-check-square-fill]="isSelected(item)"
+                [class.bi-square]="!isSelected(item)"></i>
+            }
+            <span>{{ getLabel(item) }}</span>
+        </li>
+        } @empty {
+        <li class="dropdown-item text-muted small">No items found</li>
+        }
+    </ul>
+</div>
