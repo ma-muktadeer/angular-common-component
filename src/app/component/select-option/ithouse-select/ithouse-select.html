@@ -1,0 +1,13 @@
+<div class="select-wrapper">
+    <div class="select-trigger" (click)="toggleDropdown()" [class.active]="isOpen()" [class.disabled]="disabled">
+        <span [class.pointer]="!value || (multiple && value.length === 0)">{{ displayValue }}</span>
+        <i class="bi" [class.bi-chevron-down]="!isOpen()" [class.bi-chevron-up]="isOpen()"></i>
+    </div>
+
+    @if (isOpen()) {
+    <ithouse-drop-down [items]="items" [bindLabel]="bindLabel" [bindValue]="bindValue" [multiple]="multiple"
+        [placeholder]="dropdownPlaceholder" [(ngModel)]="value" (selectionChange)="onSelectionChange($event)"
+        (close)="onDropdownClose()">
+    </ithouse-drop-down>
+    }
+</div>

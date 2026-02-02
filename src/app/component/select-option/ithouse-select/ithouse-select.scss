@@ -1,0 +1,61 @@
+@import '../../../../scss/settings/custom-variables';
+
+.select-wrapper {
+    position: relative;
+    width: 100%;
+
+    .select-trigger {
+        height: 35px;
+        border: 1px solid #d1d9e6;
+        padding: 0 10px;
+        background: $white;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.82rem;
+        color: #333;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &:hover {
+            border-color: #a0aec0;
+        }
+
+        &.active {
+            border-color: $indigo-primary;
+            box-shadow: 0 0 0 2px rgba($indigo-primary, 0.1);
+        }
+
+        &.disabled {
+            background-color: #f5f7fa;
+            border-color: #e4e7eb;
+            color: #a0aec0;
+            cursor: not-allowed;
+            pointer-events: none;
+            opacity: 0.7;
+
+            i {
+                color: #cbd5e0;
+            }
+        }
+
+        .placeholder {
+            color: #999;
+        }
+
+        i {
+            font-size: 0.7rem;
+            color: #999;
+            margin-left: 8px;
+        }
+    }
+
+    // Adjusting the internal dropdown position
+    ::ng-deep ithouse-drop-down .search-menu {
+        left: 0;
+        right: 0;
+        min-width: 100%;
+        margin-top: 4px;
+    }
+}
