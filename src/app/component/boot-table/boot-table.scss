@@ -1,0 +1,68 @@
+@import '../../../../scss/settings/custom-variables';
+
+.table-card {
+    .pointer {
+        cursor: pointer;
+    }
+
+    thead th {
+        background-color: #f8f9fc;
+        border-bottom: 2px solid #eef2ff;
+        padding: 10px;
+        transition: background-color 0.2s;
+
+        &.pointer:hover {
+            background-color: #f0f4ff;
+        }
+
+        .filter-input {
+            font-size: 0.75rem;
+            border: 1px solid #dce4ff;
+            background-color: white;
+
+            &:focus {
+                border-color: $indigo-primary;
+                box-shadow: 0 0 0 2px rgba($indigo-primary, 0.1);
+            }
+        }
+    }
+
+    tbody td {
+        padding: 8px 10px;
+        font-size: 0.82rem;
+    }
+
+    .pagination-ui {
+        i {
+            padding: 4px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+
+            &:not(.text-muted):hover {
+                background-color: #e6ecff;
+            }
+        }
+    }
+
+    .badge.bg-indigo {
+        background-color: $indigo-primary;
+        font-weight: 500;
+    }
+
+    .btn-process {
+        background-color: $indigo-dark;
+        color: white;
+        border: none;
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: darken($indigo-dark, 5%);
+        }
+    }
+
+    .page-size-selector select {
+        font-size: 0.75rem;
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+}

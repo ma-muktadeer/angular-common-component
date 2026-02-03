@@ -1,0 +1,159 @@
+<div class="table-card border rounded shadow-sm overflow-hidden bg-white">
+    <!-- @if(filteredData() && filteredData().length > 0){ -->
+    <div class="table-top-bar d-flex justify-content-between align-items-center p-2 border-bottom">
+        <div class="d-flex gap-2 align-items-center">
+            <span class="text-primary fw-bold">{{ title }}</span>
+            <span class="text-pink ms-1 d-flex gap-2 align-items-center small">
+                ( {{ filteredData().length }} items )
+            </span>
+        </div>
+        <div class="total-count small fw-bold text-primary">{{ totalLabel }} : {{ custPagenarion()?.totalItems ||
+            data.length }}</div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered mb-0 align-middle">
+            <thead>
+                <tr class="text-primary small">
+                    @for(col of columns;let i = $index;track i){
+                    <th [class]="getAlignmentClass(col)" [style.width]="col.width">
+                        @if(col.type === 'checkbox'){
+                        <input type="checkbox" class="form-check-input border-primary" [checked]="isAllSelected"
+                            (change)="toggleAll($event)">
+                        }
+                        @else {
+                        <div class="d-flex align-items-center justify-content-between" [class.pointer]="col.sortable"
+                            (click)="toggleSort(col)">
+                            <span>{{ col.label }}</span>
+                            @if(col.sortable){
+                            <i class="bi" [class]="getSortIcon(col)"></i>
+                            }
+                        </div>
+                        @if(col.filter){
+                        <div class="mt-1">
+                            <input type="text" class="form-control form-control-sm filter-input shadow-none"
+                                placeholder="Filter..." (input)="onFilterInput(col.key, $any($event.target).value)">
+                        </div>
+                        }
+                        }
+                    </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @for (item of filteredData(); let i = $index; track i) {
+                <tr>
+                    @for(col of columns;let j = $index;track j){
+                    <td [class]="getAlignmentClass(col)">
+                        @if (col.type === 'checkbox') {
+                        <input type="checkbox" class="form-check-input border-primary shadow-none"
+                            [(ngModel)]="item.selected" (change)="onRowSelect()">
+                        }
+                        @else if (col.type === 'serial') {
+                        {{ (((currentPage || 1) - 1) * (pageSize || 0)) + i + 1 }}
+                        }
+                        @else if (col.type === 'action') {
+                        <div class="d-flex justify-content-end align-items-center gap-auto">
+                            @for(action of actions; let k = $index; track k) {
+                            <button type="button"
+                                class="btn btn-sm my-0 shadow-sm d-flex align-items-center justify-content-center {{action.class}}"
+                                (click)="onActionClick(action, item)" [title]="action.title"
+                                aria-label="{{action.title}}">
+                                <i class="bi m-0 p-0" [class]="action.icon"></i>
+                            </button>
+
+                            @if(item.isEdit && action.inTableEdit) {
+                            <button type="button"
+                                class="btn btn-sm my-0 shadow-sm d-flex align-items-center justify-content-center {{action.class}}"
+                                (click)="onActionClick(tableSaveAction, item)" [title]="tableSaveAction.title"
+                                aria-label="{{tableSaveAction.title}}">
+                                <i class="bi m-0 p-0" [class]="tableSaveAction.icon"></i>
+                            </button>
+                            }
+                            }
+                        </div>
+                        }
+                        @else if (col.type === 'select') {
+                        <select class="form-select form-select-sm shadow-none" [(ngModel)]="item[col.key]"
+                            [disabled]="!item.isEdit" (change)="onCellChange(col, item, $any($event.target).value)">
+                            @for(opt of col.selectOptions; track $index) {
+                            <option [value]="opt.value">{{ opt.label }}</option>
+                            }
+                        </select>
+                        }
+                        @else if (col.type === 'input' || item.isEdit) {
+                        <input type="text" class="form-control form-control-sm shadow-none text-center m-auto"
+                            [(ngModel)]="item[col.key]" [disabled]="!item.isEdit">
+                        }
+                        @else if (col.type === 'image') {
+                        <div class="d-flex justify-content-center align-items-center py-1">
+                            @if(item[col.key]){
+                            <img [src]="item[col.key]" class="rounded shadow-sm"
+                                style="max-height: 40px; max-width: 60px; object-fit: cover; cursor: pointer;"
+                                [title]="'View Image'"
+                                (click)="onActionClick({title: 'View Image', type: 'view_image', icon: '', class: ''}, item)">
+                            } @else {
+                            <i class="bi bi-person-bounding-box text-muted fs-5"></i>
+                            }
+                        </div>
+                        }
+                        @else if (col.type === 'template') {
+                        <ng-container [ngTemplateOutlet]="getTemplate(col.key)"
+                            [ngTemplateOutletContext]="{ row: item, index: i }">
+                        </ng-container>
+                        }
+                        @else {
+                        {{ item[col.key] }}
+                        }
+                    </td>
+                    }
+                </tr>
+                }
+                @if(filteredData().length === 0){
+                <tr>
+                    <td [attr.colspan]="columns.length" class="text-center py-4 text-muted">No records found.</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    @if(_enablePagination()){
+    <div class="table-footer d-flex justify-content-between align-items-center p-2 bg-light border-top small">
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-link m-0 p-0" [disabled]="currentPage === 1" (click)="setPage(1)">
+                <i class="bi bi-chevron-double-left m-0 p-0"></i>
+            </button>
+
+            <button class="btn btn-link m-0 p-0" [disabled]="currentPage === 1" (click)="setPage(currentPage - 1)">
+                <i class="bi bi-chevron-left m-0 p-0"></i>
+            </button>
+
+            <span class="pagination-info mx-2">
+                Page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages || 1 }}</strong>
+            </span>
+
+            <button class="btn btn-link m-0 p-0" [disabled]="currentPage === totalPages || totalPages === 0"
+                (click)="setPage(currentPage + 1)">
+                <i class="bi bi-chevron-right m-0 p-0"></i>
+            </button>
+
+            <button class="btn btn-link m-0 p-0" [disabled]="currentPage === totalPages || totalPages === 0"
+                (click)="setPage(totalPages)">
+                <i class="bi bi-chevron-double-right m-0 p-0"></i>
+            </button>
+
+            <div class="page-size-selector d-flex align-items-center gap-1">
+                <span class="text-muted">Show:</span>
+                <select class="form-select form-select-sm shadow-none" style="width: 70px;" [ngModel]="pageSize"
+                    (ngModelChange)="onPageSizeChange($event)">
+                    @for ( size of pageSizeOptions; track $index) {
+                    <option [value]="size">{{ size }}</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- <button class="btn btn-process px-4 py-1 fw-bold btn-sm shadow-none" (click)="onProcess()">Process</button> -->
+    </div>
+    }
+    <!-- } -->
+</div>
